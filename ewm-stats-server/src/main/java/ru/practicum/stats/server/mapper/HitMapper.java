@@ -1,10 +1,8 @@
 package ru.practicum.stats.server.mapper;
 
-import org.springframework.stereotype.Component;
 import ru.practicum.dto.EndpointHitDto;
 import ru.practicum.stats.server.entity.Hit;
 
-@Component
 public class HitMapper {
     public static Hit toEntity(EndpointHitDto dto) {
         Hit hit = new Hit();
