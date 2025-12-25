@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
-@RequestMapping("/actuator/stats-server")
 @RequiredArgsConstructor
 public class StatsController {
 
