@@ -184,4 +184,10 @@
 		</profile>
 	</profiles>
 
+	<modules>
+		<module>ewm-dto</module>
+		<module>ewm-stats-server</module>
+		<module>ewm-stats-client</module>
+	</modules>
+
 </project>

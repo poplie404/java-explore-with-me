@@ -1,14 +1,26 @@
 services:
-  stats-server:
-    ports:
-      - "9090:9090"
-
   stats-db:
     image: postgres:16.1
-
-  ewm-service:
+    container_name: stats-db
     ports:
-      - "8080:8080"
+      - "5433:5432"
+    environment:
+      POSTGRES_DB: stats
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    volumes:
+      - ./stats-db/init.sql:/docker-entrypoint-initdb.d/init.sql
 
-  ewm-db:
-    image: postgres:16.1
+  stats-server:
+    build: ewm-stats-server
+    container_name: ewm-stats-server
+    ports:
+      - "9090:9090"
+    depends_on:
+      - stats-db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://stats-db:5432/stats
+      SPRING_DATASOURCE_USERNAME: user
+      SPRING_DATASOURCE_PASSWORD: password
+      SPRING_JPA_HIBERNATE_DDL_AUTO: validate
+      SERVER_PORT: 9090
