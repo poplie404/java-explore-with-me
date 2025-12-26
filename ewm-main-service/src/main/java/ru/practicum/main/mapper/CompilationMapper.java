@@ -52,7 +52,7 @@ public class CompilationMapper {
 
         if (request.getEvents() != null) {
             if (request.getEvents().isEmpty()) {
-                compilation.setEvents(null);  // Очищаем подборку
+                compilation.setEvents(null);
             } else {
                 compilation.setEvents(eventRepository.findAllById(request.getEvents()));
             }

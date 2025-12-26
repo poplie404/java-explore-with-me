@@ -23,6 +23,7 @@ public final class EventMapper {
                         .build())
                 .confirmedRequests(event.getConfirmedRequests())
                 .createdOn(event.getCreatedOn())
+                .description(event.getDescription())
                 .eventDate(event.getEventDate())
                 .initiator(UserShortDto.builder()
                         .id(event.getInitiatorId())
@@ -52,19 +53,17 @@ public final class EventMapper {
                 .build();
     }
 
-    public static Event toEntity(NewEventDto dto, Category category) {
+    public static Event toEntity(NewEventDto dto, Category category, Long userId) {
         return Event.builder()
                 .annotation(dto.getAnnotation())
                 .description(dto.getDescription())
                 .eventDate(dto.getEventDate())
                 .category(category)
-                .initiatorId(1L)
+                .initiatorId(userId)
                 .paid(dto.getPaid())
                 .confirmedRequests(0)
                 .createdOn(LocalDateTime.now())
                 .state(EventState.PENDING)
-                .participantLimit(null)
-                .requestModeration(true)
                 .views(0L)
                 .title(dto.getTitle())
                 .build();

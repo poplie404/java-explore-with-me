@@ -11,6 +11,7 @@ import ru.practicum.dto.UpdateCompilationRequest;
 import ru.practicum.main.entity.Compilation;
 import ru.practicum.main.mapper.CompilationMapper;
 import ru.practicum.main.repository.CompilationRepository;
+import ru.practicum.main.repository.EventRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,10 +23,18 @@ public class CompilationServiceImpl implements CompilationService {
 
     private final CompilationRepository repository;
     private final CompilationMapper compilationMapper;
+    private final EventRepository eventRepository;
 
     @Override
     @Transactional
     public CompilationDto create(NewCompilationDto dto) {
+        if (dto.getEvents() != null && !dto.getEvents().isEmpty()) {
+            for (Long eventId : dto.getEvents()) {
+                if (!eventRepository.existsById(eventId)) {
+                    throw new IllegalArgumentException("Event id=" + eventId + " not found");
+                }
+            }
+        }
         Compilation compilation = compilationMapper.toEntity(dto);
         compilation = repository.save(compilation);
         return compilationMapper.toDto(compilation);
@@ -35,6 +44,13 @@ public class CompilationServiceImpl implements CompilationService {
     @Transactional
     public CompilationDto update(Long compId, UpdateCompilationRequest request) {
         Compilation compilation = findById(compId);
+        if (request.getEvents() != null && !request.getEvents().isEmpty()) {
+            for (Long eventId : request.getEvents()) {
+                if (!eventRepository.existsById(eventId)) {
+                    throw new IllegalArgumentException("Event id=" + eventId + " not found");
+                }
+            }
+        }
         compilationMapper.updateEntity(compilation, request);
         compilation = repository.save(compilation);
         return compilationMapper.toDto(compilation);

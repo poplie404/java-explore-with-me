@@ -38,8 +38,7 @@ public class EventServiceImpl implements EventService {
         Category category = categoryRepository.findById(dto.getCategory())
                 .orElseThrow(() -> new IllegalArgumentException("Category id=" + dto.getCategory() + " not found"));
 
-        Event event = EventMapper.toEntity(dto, category);
-        event.setInitiatorId(userId);
+        Event event = EventMapper.toEntity(dto, category, userId);
         event = eventRepository.save(event);
 
         return EventMapper.toEventFullDto(event);

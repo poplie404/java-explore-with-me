@@ -24,5 +24,6 @@ public class EventFullDto {
     private UserShortDto initiator;
     private Boolean paid;
     private String title;
+    private  String description;
     private Long views;
 }
