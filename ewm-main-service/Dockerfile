@@ -1,5 +1,16 @@
 FROM eclipse-temurin:21-jre-jammy
+
 WORKDIR /app
+
+# ✅ Dockerfile сам скачает и сделает исполняемым!
+RUN apt-get update && apt-get install -y wget \
+    && wget https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh \
+    && chmod +x wait-for-it.sh \
+    && rm -rf /var/lib/apt/lists/*
+
+# Копируем JAR
 COPY target/ewm-main-service-*.jar app.jar
+
 EXPOSE 8080
-CMD ["java", "-jar", "app.jar"]
+
+ENTRYPOINT ["sh", "-c", "./wait-for-it.sh main-db:5432 --timeout=60 -- ./wait-for-it.sh stats-server:9090 --timeout=60 -- java -jar app.jar"]
