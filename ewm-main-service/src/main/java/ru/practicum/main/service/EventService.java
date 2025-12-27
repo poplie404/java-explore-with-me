@@ -1,5 +1,6 @@
 package ru.practicum.main.service;
 
+import jakarta.servlet.http.HttpServletRequest;
 import ru.practicum.dto.EventFullDto;
 import ru.practicum.dto.NewEventDto;
 import ru.practicum.dto.UpdateEventAdminRequest;
@@ -15,7 +16,7 @@ public interface EventService {
 
     List<EventFullDto> getOwnEvents(Long userId, Integer from, Integer size);
 
-    EventFullDto getEventById(Long eventId);
+    EventFullDto getEventById(Long eventId, HttpServletRequest request);
 
     EventFullDto updateEventUser(Long eventId, UpdateEventUserRequest request, Long userId);
 

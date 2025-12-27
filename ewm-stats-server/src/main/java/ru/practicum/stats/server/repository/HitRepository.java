@@ -40,4 +40,6 @@ public interface HitRepository extends JpaRepository<Hit, Long> {
     List<ViewStatsDto> findUniqueStatsByUris(@Param("start") LocalDateTime start,
                                              @Param("end") LocalDateTime end,
                                              @Param("uris") List<String> uris);
+
+    long countByUri(String uri);
 }

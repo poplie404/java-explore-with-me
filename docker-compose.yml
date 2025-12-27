@@ -5,34 +5,51 @@ services:
     ports: ["5433:5432"]
     environment:
       POSTGRES_DB: stats
-      POSTGRES_USER: user
+      POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
     volumes:
+      - stats-db-data:/var/lib/postgresql/data
       - ./stats-db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d stats"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   stats-server:
     build: ./ewm-stats-server
     container_name: stats-server
     ports: ["9090:9090"]
     depends_on:
-      - stats-db
+      stats-db:
+        condition: service_healthy
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://stats-db:5432/stats
-      SPRING_DATASOURCE_USERNAME: user
+      SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: password
+      LOGGING_LEVEL_ROOT: DEBUG
+      LOGGING_LEVEL_COM_EWM_STATS: DEBUG
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9090/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
 
   main-db:
     image: postgres:16
     container_name: main-db
-    ports: [ "5432:5432" ]
+    ports: []
     environment:
       POSTGRES_DB: main
-      POSTGRES_USER: user
+      POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
     volumes:
+      - main-db-data:/var/lib/postgresql/data
       - ./main-db/init.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U user -d main" ]
+      test: ["CMD-SHELL", "pg_isready -U postgres -d main"]
       interval: 5s
       timeout: 5s
       retries: 10
@@ -45,9 +62,23 @@ services:
       main-db:
         condition: service_healthy
       stats-server:
-        condition: service_started
+        condition: service_healthy
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://main-db:5432/main
-      SPRING_DATASOURCE_USERNAME: user
+      SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: password
       STATS_SERVER_URL: http://stats-server:9090
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
+
+volumes:
+  main-db-data:
+  stats-db-data:
+networks:
+  ewm-network:
+    driver: bridge

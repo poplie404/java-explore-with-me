@@ -30,7 +30,7 @@ public final class EventMapper {
                         .build())
                 .paid(event.getPaid())
                 .title(event.getTitle())
-                .views(event.getViews())
+                .views(0L)
                 .build();
     }
 
@@ -49,9 +49,10 @@ public final class EventMapper {
                         .build())
                 .paid(event.getPaid())
                 .title(event.getTitle())
-                .views(event.getViews())
+                .views(0L)
                 .build();
     }
+
 
     public static Event toEntity(NewEventDto dto, Category category, Long userId) {
         return Event.builder()

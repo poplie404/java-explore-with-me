@@ -1,5 +1,6 @@
 package ru.practicum.main.controller.private_;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -39,8 +40,8 @@ public class PrivateEventController {
     // 3. Получить событие по ID
     @GetMapping("/{eventId}")
     public EventFullDto getEvent(@PathVariable Long userId,
-                                 @PathVariable Long eventId) {
-        return eventService.getEventById(eventId);
+                                 @PathVariable Long eventId, HttpServletRequest request) {
+        return eventService.getEventById(eventId,request);
     }
 
     // 4. Обновить свое событие
