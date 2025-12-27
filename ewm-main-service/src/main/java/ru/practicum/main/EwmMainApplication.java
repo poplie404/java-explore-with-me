@@ -3,7 +3,7 @@ package ru.practicum.main;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {"ru.practicum.main", "ru.practicum.stats.client"})
 public class EwmMainApplication {
     public static void main(String[] args) {
         SpringApplication.run(EwmMainApplication.class, args);
