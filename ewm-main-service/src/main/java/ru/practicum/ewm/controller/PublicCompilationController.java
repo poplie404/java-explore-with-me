@@ -28,4 +28,3 @@ public class PublicCompilationController {
         return compilationService.getById(compId);
     }
 }
-

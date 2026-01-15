@@ -1,6 +1,8 @@
 package ru.practicum.ewm.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -29,6 +31,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -39,15 +42,18 @@ public class EventServiceImpl implements EventService {
     private final ParticipationRequestRepository requestRepository;
     private final StatsClient statsClient;
 
+    @Value("${spring.application.name}")
+    private String appName;
+
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-    private static final String APP_NAME = "ewm-main-service";
+    private static final int MIN_HOURS_BEFORE_EVENT = 2;
     private static final LocalDateTime MIN_DATETIME = LocalDateTime.of(1970, 1, 1, 0, 0, 0);
     private static final LocalDateTime MAX_DATETIME = LocalDateTime.of(2099, 12, 31, 23, 59, 59);
 
     @Override
     @Transactional
     public EventFullDto create(Long userId, NewEventDto eventDto) {
-        if (eventDto.getEventDate().isBefore(LocalDateTime.now().plusHours(2))) {
+        if (eventDto.getEventDate().isBefore(LocalDateTime.now().plusHours(MIN_HOURS_BEFORE_EVENT))) {
             throw new BadRequestException("Field: eventDate. Error: должно содержать дату, которая еще не наступила. Value: " + eventDto.getEventDate());
         }
 
@@ -99,7 +105,7 @@ public class EventServiceImpl implements EventService {
             throw new ConflictException("Only pending or canceled events can be changed");
         }
 
-        if (request.getEventDate() != null && request.getEventDate().isBefore(LocalDateTime.now().plusHours(2))) {
+        if (request.getEventDate() != null && request.getEventDate().isBefore(LocalDateTime.now().plusHours(MIN_HOURS_BEFORE_EVENT))) {
             throw new BadRequestException("Field: eventDate. Error: должно содержать дату, которая еще не наступила. Value: " + request.getEventDate());
         }
 
@@ -119,13 +125,6 @@ public class EventServiceImpl implements EventService {
     @Override
     public List<EventFullDto> getAdminEvents(List<Long> users, List<EventState> states, List<Long> categories,
                                              LocalDateTime rangeStart, LocalDateTime rangeEnd, int from, int size, Pageable pageable) {
-        if (from < 0) {
-            throw new BadRequestException("from must be >= 0");
-        }
-        if (size <= 0) {
-            throw new BadRequestException("size must be > 0");
-        }
-
         if (rangeStart != null && rangeEnd != null && rangeStart.isAfter(rangeEnd)) {
             throw new BadRequestException("rangeStart must be before rangeEnd");
         }
@@ -358,11 +357,13 @@ public class EventServiceImpl implements EventService {
                     try {
                         Long eventId = Long.parseLong(uri.substring("/events/".length()));
                         viewsMap.put(eventId, stat.getHits());
-                    } catch (NumberFormatException ignore) {
+                    } catch (NumberFormatException e) {
+                        log.error("Failed to parse event ID from URI: {}", uri, e);
                     }
                 }
             }
-        } catch (Exception ignore) {
+        } catch (Exception e) {
+            log.error("Failed to get views statistics", e);
         }
 
         for (Event event : events) {
@@ -388,21 +389,22 @@ public class EventServiceImpl implements EventService {
                     .map(ViewStatsDto::getHits)
                     .orElse(0L);
         } catch (Exception e) {
+            log.error("Failed to get views for event ID: {}", eventId, e);
             return 0L;
         }
     }
 
     private void saveHit(String uri, String ip) {
         EndpointHitDto hit = EndpointHitDto.builder()
-                .app(APP_NAME)
+                .app(appName)
                 .uri(uri)
                 .ip(ip)
                 .timestamp(LocalDateTime.now())
                 .build();
         try {
             statsClient.hit(hit);
-        } catch (Exception ignore) {
+        } catch (Exception e) {
+            log.error("Failed to save hit for URI: {}, IP: {}", uri, ip, e);
         }
     }
 }
-

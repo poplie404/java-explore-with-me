@@ -30,4 +30,3 @@ public class ErrorHandler {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 }
-

@@ -24,7 +24,3 @@ public class UserDto {
     @Size(min = 6, max = 254)
     private String email;
 }
-
-
-
-

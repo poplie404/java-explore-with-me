@@ -17,4 +17,3 @@ public interface ParticipationRequestService {
 
     EventRequestStatusUpdateResult updateRequestStatus(Long userId, Long eventId, EventRequestStatusUpdateRequest request);
 }
-

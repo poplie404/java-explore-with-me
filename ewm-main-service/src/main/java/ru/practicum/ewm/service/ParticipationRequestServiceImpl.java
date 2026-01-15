@@ -1,6 +1,5 @@
 package ru.practicum.ewm.service;
 
-import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,7 +29,6 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
     private final ParticipationRequestRepository requestRepository;
     private final EventRepository eventRepository;
     private final UserRepository userRepository;
-    private final EntityManager entityManager;
 
     @Override
     @Transactional
@@ -148,8 +146,7 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
                 }
             }
 
-            requestRepository.saveAll(requests);
-            entityManager.flush();
+            requestRepository.saveAllAndFlush(requests);
 
             if (event.getParticipantLimit() > 0 && confirmedRequests >= event.getParticipantLimit()) {
                 List<Long> processedRequestIds = requests.stream()
@@ -181,4 +178,3 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
                 .build();
     }
 }
-

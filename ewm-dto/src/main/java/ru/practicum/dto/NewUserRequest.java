@@ -22,7 +22,3 @@ public class NewUserRequest {
     @Size(min = 6, max = 254)
     private String email;
 }
-
-
-
-

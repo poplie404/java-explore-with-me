@@ -48,4 +48,3 @@ public class PrivateRequestController {
         return requestService.updateRequestStatus(userId, eventId, request);
     }
 }
-

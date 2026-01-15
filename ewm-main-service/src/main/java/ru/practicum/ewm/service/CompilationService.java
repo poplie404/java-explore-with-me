@@ -18,4 +18,3 @@ public interface CompilationService {
 
     CompilationDto getById(Long compId);
 }
-

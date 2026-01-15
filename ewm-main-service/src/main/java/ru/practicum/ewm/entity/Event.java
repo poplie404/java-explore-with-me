@@ -63,5 +63,3 @@ public class Event {
     @Column(nullable = false, length = 120)
     private String title;
 }
-
-

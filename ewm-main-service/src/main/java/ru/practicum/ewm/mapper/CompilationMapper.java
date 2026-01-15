@@ -3,12 +3,13 @@ package ru.practicum.ewm.mapper;
 import ru.practicum.dto.CompilationDto;
 import ru.practicum.dto.EventShortDto;
 import ru.practicum.ewm.entity.Compilation;
+import java.util.Map;
 
 import java.util.Set;
 import java.util.stream.Collectors;
 
 public class CompilationMapper {
-    public static CompilationDto toDto(Compilation compilation, java.util.Map<Long, Long> confirmedRequestsMap, java.util.Map<Long, Long> viewsMap) {
+    public static CompilationDto toDto(Compilation compilation, Map<Long, Long> confirmedRequestsMap, Map<Long, Long> viewsMap) {
         Set<EventShortDto> events = null;
         if (compilation.getEvents() != null) {
             events = compilation.getEvents().stream()
@@ -27,4 +28,3 @@ public class CompilationMapper {
                 .build();
     }
 }
-

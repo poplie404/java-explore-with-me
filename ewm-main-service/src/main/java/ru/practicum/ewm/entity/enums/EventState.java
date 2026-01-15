@@ -5,7 +5,3 @@ public enum EventState {
     PUBLISHED,
     CANCELED
 }
-
-
-
-

@@ -31,7 +31,3 @@ public class Compilation {
     @Column(nullable = false, unique = true, length = 50)
     private String title;
 }
-
-
-
-

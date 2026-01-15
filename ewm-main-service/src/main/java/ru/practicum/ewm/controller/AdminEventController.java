@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.dto.EventFullDto;
 import ru.practicum.dto.UpdateEventAdminRequest;
 import ru.practicum.ewm.entity.enums.EventState;
+import ru.practicum.ewm.exception.BadRequestException;
 import ru.practicum.ewm.service.EventService;
 
 import java.time.LocalDateTime;
@@ -29,6 +30,12 @@ public class AdminEventController {
             @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime rangeEnd,
             @RequestParam(defaultValue = "0") int from,
             @RequestParam(defaultValue = "10") int size) {
+        if (from < 0) {
+            throw new BadRequestException("from must be >= 0");
+        }
+        if (size <= 0) {
+            throw new BadRequestException("size must be > 0");
+        }
         Pageable pageable = PageRequest.of(from / size, size);
         return eventService.getAdminEvents(users, states, categories, rangeStart, rangeEnd, from, size, pageable);
     }
@@ -39,4 +46,3 @@ public class AdminEventController {
         return eventService.updateByAdmin(eventId, request);
     }
 }
-

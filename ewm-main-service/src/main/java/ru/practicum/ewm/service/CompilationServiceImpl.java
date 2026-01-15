@@ -114,4 +114,3 @@ public class CompilationServiceImpl implements CompilationService {
         return CompilationMapper.toDto(compilation, confirmedRequestsMap, viewsMap);
     }
 }
-

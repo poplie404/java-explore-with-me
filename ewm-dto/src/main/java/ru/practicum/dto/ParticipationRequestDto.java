@@ -20,7 +20,3 @@ public class ParticipationRequestDto {
     private Long requester;
     private String status;
 }
-
-
-
-

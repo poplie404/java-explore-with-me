@@ -27,4 +27,3 @@ public interface EventService {
 
     EventFullDto getPublicEvent(Long eventId, String ip);
 }
-

@@ -16,7 +16,3 @@ public class Location {
     @Column(nullable = false)
     private Float lon;
 }
-
-
-
-

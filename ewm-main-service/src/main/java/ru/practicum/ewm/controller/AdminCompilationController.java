@@ -33,4 +33,3 @@ public class AdminCompilationController {
         compilationService.delete(compId);
     }
 }
-

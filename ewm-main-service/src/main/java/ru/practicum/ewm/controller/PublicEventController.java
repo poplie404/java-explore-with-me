@@ -50,4 +50,3 @@ public class PublicEventController {
         return request.getRemoteAddr();
     }
 }
-

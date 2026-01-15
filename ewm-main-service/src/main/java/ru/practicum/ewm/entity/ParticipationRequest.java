@@ -34,7 +34,3 @@ public class ParticipationRequest {
     @Column(nullable = false, length = 20)
     private RequestStatus status;
 }
-
-
-
-

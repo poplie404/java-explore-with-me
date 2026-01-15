@@ -16,7 +16,3 @@ public class NewCategoryDto {
     @Size(min = 1, max = 50)
     private String name;
 }
-
-
-
-
