@@ -11,12 +11,12 @@ import java.util.Optional;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
     Page<Comment> findByEventId(Long eventId, Pageable pageable);
-    
+
     Page<Comment> findByEventIdAndStatus(Long eventId, CommentStatus status, Pageable pageable);
-    
+
     Optional<Comment> findByIdAndAuthorId(Long commentId, Long authorId);
-    
+
     Page<Comment> findByAuthorId(Long authorId, Pageable pageable);
-    
+
     List<Comment> findByEventId(Long eventId);
 }

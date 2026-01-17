@@ -38,14 +38,14 @@ public class CommentServiceImpl implements CommentService {
     public CommentDto create(Long userId, Long eventId, NewCommentDto commentDto) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("User with id=" + userId + " was not found"));
-        
+
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new NotFoundException("Event with id=" + eventId + " was not found"));
-        
+
         if (event.getState() == EventState.CANCELED) {
             throw new ConflictException("Comments can only be added to published or pending events");
         }
-        
+
         Comment comment = Comment.builder()
                 .text(commentDto.getText())
                 .event(event)
@@ -53,7 +53,7 @@ public class CommentServiceImpl implements CommentService {
                 .createdOn(LocalDateTime.now())
                 .status(CommentStatus.PUBLISHED)
                 .build();
-        
+
         Comment saved = commentRepository.save(comment);
         log.info("Comment created: id={}, eventId={}, authorId={}", saved.getId(), eventId, userId);
         return CommentMapper.toDto(saved);
@@ -64,12 +64,12 @@ public class CommentServiceImpl implements CommentService {
     public CommentDto update(Long userId, Long commentId, UpdateCommentRequest request) {
         Comment comment = commentRepository.findByIdAndAuthorId(commentId, userId)
                 .orElseThrow(() -> new NotFoundException("Comment with id=" + commentId + " was not found"));
-        
+
         if (request.getText() != null && !request.getText().isBlank()) {
             comment.setText(request.getText());
             comment.setUpdatedOn(LocalDateTime.now());
         }
-        
+
         Comment saved = commentRepository.save(comment);
         log.info("Comment updated: id={}, authorId={}", commentId, userId);
         return CommentMapper.toDto(saved);
@@ -80,7 +80,7 @@ public class CommentServiceImpl implements CommentService {
     public void delete(Long userId, Long commentId) {
         Comment comment = commentRepository.findByIdAndAuthorId(commentId, userId)
                 .orElseThrow(() -> new NotFoundException("Comment with id=" + commentId + " was not found"));
-        
+
         commentRepository.delete(comment);
         log.info("Comment deleted: id={}, authorId={}", commentId, userId);
     }
@@ -90,7 +90,7 @@ public class CommentServiceImpl implements CommentService {
         if (!eventRepository.existsById(eventId)) {
             throw new NotFoundException("Event with id=" + eventId + " was not found");
         }
-        
+
         return commentRepository.findByEventIdAndStatus(eventId, CommentStatus.PUBLISHED, pageable)
                 .stream()
                 .map(CommentMapper::toDto)
@@ -102,7 +102,7 @@ public class CommentServiceImpl implements CommentService {
         if (!userRepository.existsById(userId)) {
             throw new NotFoundException("User with id=" + userId + " was not found");
         }
-        
+
         return commentRepository.findByAuthorId(userId, pageable)
                 .stream()
                 .map(CommentMapper::toDto)
@@ -113,11 +113,11 @@ public class CommentServiceImpl implements CommentService {
     public CommentDto getCommentById(Long commentId) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new NotFoundException("Comment with id=" + commentId + " was not found"));
-        
+
         if (comment.getStatus() != CommentStatus.PUBLISHED) {
             throw new NotFoundException("Comment with id=" + commentId + " was not found");
         }
-        
+
         return CommentMapper.toDto(comment);
     }
 }
