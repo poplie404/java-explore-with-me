@@ -2,35 +2,39 @@ package ru.practicum.ewm.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import ru.practicum.ewm.entity.enums.RequestStatus;
+import ru.practicum.ewm.entity.enums.CommentStatus;
 
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "participation_requests",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"event_id", "requester_id"}))
+@Table(name = "comments")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ParticipationRequest {
+public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private LocalDateTime created;
+    @Column(nullable = false, length = 5000, columnDefinition = "text")
+    private String text;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "event_id", nullable = false)
     private Event event;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "requester_id", nullable = false)
-    private User requester;
+    @JoinColumn(name = "author_id", nullable = false)
+    private User author;
+
+    @Column(nullable = false)
+    private LocalDateTime createdOn;
+
+    private LocalDateTime updatedOn;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
-    private RequestStatus status;
+    private CommentStatus status;
 }
