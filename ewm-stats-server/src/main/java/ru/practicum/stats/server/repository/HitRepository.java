@@ -13,14 +13,12 @@ import java.util.List;
 @Repository
 public interface HitRepository extends JpaRepository<Hit, Long> {
 
-    // Без фильтра по uris
     @Query("SELECT new ru.practicum.dto.ViewStatsDto(h.app, h.uri, COUNT(h)) " +
             "FROM Hit h WHERE h.timestamp BETWEEN :start AND :end " +
             "GROUP BY h.app, h.uri ORDER BY COUNT(h) DESC")
     List<ViewStatsDto> findStats(@Param("start") LocalDateTime start,
                                  @Param("end") LocalDateTime end);
 
-    // С фильтром по uris
     @Query("SELECT new ru.practicum.dto.ViewStatsDto(h.app, h.uri, COUNT(h)) " +
             "FROM Hit h WHERE h.timestamp BETWEEN :start AND :end AND h.uri IN :uris " +
             "GROUP BY h.app, h.uri ORDER BY COUNT(h) DESC")

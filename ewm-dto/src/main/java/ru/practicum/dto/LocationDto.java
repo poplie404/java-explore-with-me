@@ -9,8 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ViewStatsDto {
-    private String app;
-    private String uri;
-    private Long hits;
+public class LocationDto {
+    private Float lat;
+    private Float lon;
 }

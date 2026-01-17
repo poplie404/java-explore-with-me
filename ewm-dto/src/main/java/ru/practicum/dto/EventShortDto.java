@@ -12,11 +12,16 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class EndpointHitDto {
+public class EventShortDto {
     private Long id;
-    private String app;
-    private String uri;
-    private String ip;
+    private String annotation;
+    private CategoryDto category;
+    private Long confirmedRequests;
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime timestamp;
+    private LocalDateTime eventDate;
+    private UserShortDto initiator;
+    private Boolean paid;
+    private String title;
+    private Long views;
 }

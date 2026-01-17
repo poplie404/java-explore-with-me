@@ -5,12 +5,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ViewStatsDto {
-    private String app;
-    private String uri;
-    private Long hits;
+public class EventRequestStatusUpdateRequest {
+    private List<Long> requestIds;
+    private String status; // CONFIRMED, REJECTED
 }

@@ -34,9 +34,12 @@ public class StatsController {
             LocalDateTime end,
             @RequestParam(required = false)
             List<String> uris,
-            @RequestParam(defaultValue = "false")
+            @RequestParam(required = false, defaultValue = "false")
             Boolean unique
     ) {
+        if (unique == null) {
+            unique = false;
+        }
         return statsService.getStats(start, end, uris, unique);
     }
 }

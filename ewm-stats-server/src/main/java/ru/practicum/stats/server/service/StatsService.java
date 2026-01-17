@@ -2,6 +2,7 @@ package ru.practicum.stats.server.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.dto.EndpointHitDto;
 import ru.practicum.dto.ViewStatsDto;
 import ru.practicum.stats.server.entity.Hit;
@@ -13,10 +14,12 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class StatsService {
     private final HitRepository repository;
     private final HitMapper mapper;
 
+    @Transactional
     public EndpointHitDto save(EndpointHitDto dto) {
         Hit hit = mapper.toEntity(dto);
         Hit saved = repository.save(hit);
@@ -44,4 +47,3 @@ public class StatsService {
         }
     }
 }
-

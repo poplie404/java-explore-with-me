@@ -12,11 +12,11 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class EndpointHitDto {
+public class ParticipationRequestDto {
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
+    private LocalDateTime created;
+    private Long event;
     private Long id;
-    private String app;
-    private String uri;
-    private String ip;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime timestamp;
+    private Long requester;
+    private String status;
 }
