@@ -36,8 +36,8 @@ public class PublicEventController {
         return eventService.getPublicEvents(text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort, pageable, ip);
     }
 
-    @GetMapping("/{id}")
-    public EventFullDto getEvent(@PathVariable Long id, HttpServletRequest request) {
+    @GetMapping("/{id:[0-9]+}")
+    public EventFullDto getEvent(@PathVariable("id") Long id, HttpServletRequest request) {
         String ip = getClientIp(request);
         return eventService.getPublicEvent(id, ip);
     }

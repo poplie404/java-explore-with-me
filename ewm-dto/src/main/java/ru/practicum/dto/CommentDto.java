@@ -12,11 +12,17 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ParticipationRequestDto {
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
-    private LocalDateTime created;
-    private Long event;
+public class CommentDto {
     private Long id;
-    private Long requester;
+    private String text;
+    private UserShortDto author;
+    private Long eventId;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime createdOn;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime updatedOn;
+
     private String status;
 }

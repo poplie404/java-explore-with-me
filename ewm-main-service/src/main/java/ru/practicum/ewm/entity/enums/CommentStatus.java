@@ -1,7 +1,8 @@
 package ru.practicum.ewm.entity.enums;
 
-public enum EventState {
+public enum CommentStatus {
     PENDING,
     PUBLISHED,
-    CANCELED
+    REJECTED
 }
+

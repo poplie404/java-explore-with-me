@@ -6,16 +6,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Set;
-
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UpdateCompilationRequest {
-    private Set<Long> events;
-    private Boolean pinned;
-
-    @Size(min = 1, max = 50)
-    private String title;
+public class UpdateCommentRequest {
+    @Size(min = 1, max = 5000)
+    private String text;
 }

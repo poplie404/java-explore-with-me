@@ -33,7 +33,7 @@ public class UpdateEventAdminRequest {
 
     private Boolean requestModeration;
 
-    private String stateAction; // PUBLISH_EVENT, REJECT_EVENT
+    private String stateAction;
 
     @Size(min = 3, max = 120)
     private String title;
